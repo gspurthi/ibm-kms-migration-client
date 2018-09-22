@@ -1,0 +1,20 @@
+IBM 2018 Copyright
+
+The procedure and scripts for migrating the customer keys from the Legacy KP to the new KP service
+
+Procedure
+
+
+0. Create a new Key Protect instance - follow the Bluemix instruction
+0. Get account info ready: 
+0. Bluemix account user name, password
+0. Legacy KP account id, organization name, space name
+0. New KP account_id, instance name, region name
+1. Export all standard secret keys from the Legacy Key Protect service - run "this script command A"
+2. Create a new KP account and a KP instance - follow "this instruction I"
+3. Import the secret keys in the base64 form to the KP instance in the new KP service account - run "this script command B"
+4. Varify the migration - run "this script command C"
+5. Update your applications that use the KP service to change the end point - follow "this instruction II"
+   Update your applications to send a base64 payload when creating a secret key, ato convert from a base64 payload when retrieving a secret key. 
+6. Notify KP team the migration is done for you "customer X" - send email to ""
+
