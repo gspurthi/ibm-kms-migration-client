@@ -1,0 +1,6 @@
+bin/*
+envs
+migration.csv
+
+cmd/*/kp
+cmd/*/migration-client
