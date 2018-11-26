@@ -106,6 +106,8 @@ func (c Client) List() []StandardKey {
 		key := val.(map[string]interface{})
 		keys = append(keys, StandardKey(key))
 	}
+	numberOfKeys := len(keys)
+	log.Printf("Number of legacy keys: %d\n", numberOfKeys)
 	return keys
 }
 

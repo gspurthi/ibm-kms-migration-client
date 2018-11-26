@@ -1,62 +1,43 @@
 #!/bin/bash
+source envs
 
-# Legacy Key Protect instance
-#LEGACY_ACCT=""
-#ORG_NAME=""
-#SPACE_NAME=""
-
-# new Key Protect instance
-#ACCT=""
-#REGION="us-south"
-#BLUEMIX_API_KEY=""
-#INSTANCE_ID=""
-
-export BLUEMIX_VERSION_CHECK=false
-
-uaa_token_file=$(readlink -f ~/.uaatoken)
-iam_token_file=$(readlink -f ~/.iamtoken)
-
-function refresh_uaa_token {
-    BX_APIKEY="${BLUEMIX_API_KEY}"
-    export BLUEMIX_API_KEY=
-    bx login -a https://api.ng.bluemix.net -c "$LEGACY_ACCT" -o "$ORG_NAME" -s "$SPACE_NAME"
-    UAA_TOKEN=$(bx iam oauth-tokens | tail -n 1 | sed 's/UAA token:  //')
-    ORG_ID=$(bx cf org "$ORG_NAME" --guid | tail -n 1)
-    SPACE_ID=$(bx cf space "$SPACE_NAME" --guid | tail -n 1)
-
-cat > $uaa_token_file <<-EOH
-export UAA_TOKEN="${UAA_TOKEN}"
-export ORG_ID="${ORG_ID}"
-export SPACE_ID="${SPACE_ID}"
-EOH
-
-    BLUEMIX_API_KEY="${BX_APIKEY}"
+function get_legacy_acc_info {
+    echo "==  logging to legacy account"
+    echo
+    bx login -a https://api.ng.bluemix.net --apikey $LEGACY_ACCOUNT_API_KEY
+    echo "==  targetting to org and space"
+    echo
+    bx target --cf-api https://api.ng.bluemix.net -o "$CF_ORG" -s "$CF_SPACE"
+    ORG_ID=$(bx cf org "$CF_ORG" --guid | tail -n 1)
+    SPACE_ID=$(bx cf space "$CF_SPACE" --guid | tail -n 1)
+    echo "==  obtained org_id, space_id"
+    echo
 }
 
-function refresh_iam_token {
-    BLUEMIX_API_KEY="${BLUEMIX_API_KEY}" bx login -a https://api.ng.bluemix.net
-    bx iam oauth-tokens | awk '{print $3" "$4}' > $iam_token_file
+function get_new_acc_info {
+    echo "==  logging to new account"
+    echo
+    bx login -a https://api.ng.bluemix.net --apikey $KP_ACCOUNT_API_KEY
+    KP_SERVICE_INSTANCE_ID=$(bx resource service-instance "$KP_SERVICE_INSTANCE_NAME" | grep GUID: | sed 's/GUID://' | sed 's/ //g')
+    IAM_TOKEN=$(bx iam oauth-tokens | awk '{print $3" "$4}')
+    echo "==  obtained iam_token, kp_service_instance_id"
+    echo
 }
 
-if [[ ! -e $uaa_token_file ]]; then
-    echo "UAA token file not found."
-    refresh_uaa_token
-fi
-if [[ $(find $uaa_token_file -mmin +20) ]]; then
-    echo "UAA token file old."
-    refresh_uaa_token
-fi
+echo
+echo "== getting legacy account info"
+get_legacy_acc_info
 
-if [[ ! -e $iam_token_file ]]; then
-    echo "IAM token file not found."
-    refresh_iam_token
-fi
-if [[ $(find $iam_token_file -mmin +20) ]]; then
-    echo "IAM token file old."
-    refresh_iam_token
-fi
+echo
+echo "== getting new account info"
+get_new_acc_info
 
-IAM_TOKEN=$(cat $iam_token_file)
-source $uaa_token_file
+echo
+echo "== running key migration"
+./bin/migration-client --org-id="$ORG_ID" --space-id="$SPACE_ID" --instance-id="$KP_SERVICE_INSTANCE_ID" --iam-token="$IAM_TOKEN" &> migration-client.log
+echo
 
-bin/migration-client --org-id="$ORG_ID" --space-id="$SPACE_ID" --uaa-token="$UAA_TOKEN" --instance-id="$INSTANCE_ID" --iam-token="$IAM_TOKEN"
+if [[ -f migration-client.log && -s migration-client.log ]]
+then
+	echo "== key migration script completed, please review migration-client.log file for detail"
+fi

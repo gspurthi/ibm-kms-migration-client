@@ -16,7 +16,8 @@ The enclosed package contains the scripts for migrating the standard secret keys
 
 ##### To set up migration client:
 
-1. Clone the migration client repository into you go workspace
+1. Extract the archive migration-client.zip into a directory "migration-client"
+   Then
         $ cd migration-client
 
 2. Set up following environment variables in file `envs`
@@ -40,7 +41,7 @@ The enclosed package contains the scripts for migrating the standard secret keys
    - Set the variables for the new Key Protect instance
      -  Log in to the Bluemix console on https://console.bluemix.net
      - Select the new account for the new Key Protect service from the user profile on the top right corner
-     - Select Dashboard, find the value [instance name] for KP_SERVICE_INSTANCE_NAME
+     - Select Dashboard, find the value [your service name] for KP_SERVICE_INSTANCE_NAME
      - Select Manage -> Security -> Platform API Keys -> Create
      - Enter the key name and description -> Create -> save and copy the [new account key] to KP_ACCOUNT_API_KEY
             export INSTANCE_NAME="[instance name]"
@@ -48,21 +49,17 @@ The enclosed package contains the scripts for migrating the standard secret keys
 
 ##### Migrate Keys
 
-Run make to build the binaries
-
-      migration-client> make
-
-- `make` command generated binaries `migration-client` and `kp` in bin folder
-
 Run the client-wrapper.sh script to initiate standard key migration from your legacy instance
 
-      migration-client> ./client-wrapper.sh
+        migration-client> ./client-wrapper.sh
 
    - The standard secret keys migrated are recorded in file `migration.csv`
    - The keys in the legacy account remain there.
    - The migration run logs will be recorded in `migration-client.log`
 
   > NOTE: If migration fails in the middle of moving keys, the migration.csv file has the list of keys migrated. Please save the migration.csv file to resume the migration procress when re-run, otherwise all keys are moved again and there will be duplicate keys in the new instance.
+
+- Login to https://console.bluemix.net and go to your key protect instance and list the keys to verify the legacy keys have been migrated.
 
 
 ##### Update your applications to new Key Protect service
@@ -77,7 +74,8 @@ Run the client-wrapper.sh script to initiate standard key migration from your le
             $ echo <base64-payload> | base64 -D
 
 ##### Testing migration and notifying to the team
-- Perform a regression test on you applications
+
+- Perform a regression test on your applications
 
 - Notify the Key Protect team that your migration has completed by sending an email to ""
 

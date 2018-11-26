@@ -36,14 +36,12 @@ func main() {
 
 	var orgId string
 	var spaceId string
-	var uaaToken string
 
 	var instanceId string
 	var iamToken string
 
 	flag.StringVar(&orgId, "org-id", "", "Org UUID for Legacy KP service")
 	flag.StringVar(&spaceId, "space-id", "", "Space UUID for Legacy KP service")
-	flag.StringVar(&uaaToken, "uaa-token", "", "UAA Auth Token from Bluemix/IBM Cloud client")
 	flag.StringVar(&instanceId, "instance-id", "", "Instance UUID for KP service")
 	flag.StringVar(&iamToken, "iam-token", "", "IAM Auth Token from Bluemix/IBM Cloud client")
 	flag.Parse()
@@ -54,25 +52,25 @@ func main() {
 	if spaceId == "" {
 		log.Fatalln("Must specify space-id")
 	}
-	if uaaToken == "" {
-		log.Fatalln("Must specify uaa-token")
-	}
 	if instanceId == "" {
-		log.Fatalln("Must specify instance-id")
+		log.Fatalln("Must specify instance-id, Please verify the instance is valid and exists in ibmcloud")
 	}
 	if iamToken == "" {
 		log.Fatalln("Must specify iam-token")
 	}
 
-	if !strings.HasPrefix(uaaToken, "bearer") && !strings.HasPrefix(uaaToken, "Bearer") {
-		uaaToken = "bearer " + uaaToken
-	}
 	if !strings.HasPrefix(iamToken, "bearer") && !strings.HasPrefix(iamToken, "Bearer") {
 		iamToken = "bearer " + iamToken
 	}
 
-	legacy := keyprotect.NewLegacyClient(orgId, spaceId, uaaToken)
+	legacy := keyprotect.NewLegacyClient(orgId, spaceId, iamToken)
+	if legacy == nil {
+		log.Fatalln("Failed to create legacy client")
+	}
 	kp := keyprotect.NewKPClient(instanceId, iamToken)
+	if kp == nil {
+		log.Fatalln("Failed to create KP client")
+	}
 
 	//defer func() {
 	//	if r := recover(); r != nil {
@@ -122,11 +120,11 @@ func main() {
 	for _, key := range keys {
 
 		if newId, ok := oldIdMap[key.Id()]; ok {
-			fmt.Printf("Key already migrated: Old ID: %s, New ID: %s\n", key.Id(), newId)
+			log.Printf("Key already migrated: Old ID: %s, New ID: %s\n", key.Id(), newId)
 			continue
 		}
 
-		fmt.Printf("Migrating old key [%s]\n", key.Id())
+		log.Printf("Migrating old key [%s]\n", key.Id())
 		fullKey := legacy.Get(key.Id())
 
 		if rawPayload, ok := fullKey["payload"]; ok {
@@ -136,9 +134,9 @@ func main() {
 
 		newKey, err := kp.CreateFromDef(fullKey)
 		if err != nil {
-			fmt.Printf("Error while creating new key: %s\n", err)
+			log.Printf("Error while creating new key: %s\n", err)
 		} else {
-			fmt.Printf("Key migrated. Old ID: %s, New ID: %s\n", fullKey.Id(), newKey.Id())
+			log.Printf("Key migrated. Old ID: %s, New ID: %s\n", fullKey.Id(), newKey.Id())
 			migrated = append(migrated, []string{fullKey.Id(), newKey.Id()})
 			if err := writeConsistent(migrated); err != nil {
 				log.Printf("error saving migration state: %s\n", err)

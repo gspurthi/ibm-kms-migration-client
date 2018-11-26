@@ -5,5 +5,5 @@ test: build
 	bash -c ". envs && bash test/client-wrapper.sh"
 
 %:: cmd/%/main.go
-	(cd cmd/$@ && go build . )
-	mkdir -p ./bin && cp cmd/$@/$@ ./bin/$@
+	(cd cmd/$@ && go build main.go )
+	mkdir -p ./bin && cp cmd/$@/main ./bin/$@
