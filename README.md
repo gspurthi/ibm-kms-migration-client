@@ -121,8 +121,8 @@ To generate authentication credentials for your new Key Protect service instance
 
 Success! Your existing keys are now migrated into a new Key Protect service instance. You can view how the old key IDs map to the migrated keys by inspecting the `migration.csv` file that is generated after the migration completes. The following table shows an example `migration.csv`file:
 
-| Old key ID | New key ID |
-| --- | --- |
+| Old key ID                           | New key ID                           |
+| ------------------------------------ | ------------------------------------ |
 | ef9eb687-b508-45f0-8a3e-1def949bc9f8 | e9ab551c-46fe-448a-8a3c-e0f23dfff362 |
 
 The Key Protect keys that are stored in your Cloud Foundry org and space remain in the legacy Key Protect service instance until you're ready to [permanently delete the keys, and then delete the legacy Key Protect service instance]().
