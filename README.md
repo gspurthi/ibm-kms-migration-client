@@ -3,9 +3,9 @@
 
 IBM® Key Protect service instances provisioned before 15 December 2017 are running on a legacy infrastructure that is based on Cloud Foundry. To enable fine-grained access control with Cloud IAM and other service improvements, we recommend that teams migrate their Key Protect keys into a newly provisioned instance of Key Protect.
 
-Use this go client to migrate your existing encryption keys into a new Key Protect service instance, so that you may take advantage of the latest IBM Cloud platform functionalities, enhanced security, and expanded availability of our service. 
+Use this go client to migrate your existing encryption keys into a new Key Protect service instance, so that you may take advantage of the latest IBM Cloud platform functionalities, enhanced security, and expanded availability of our service.
 
->**Note:** This package requires go v1.10 or higher, the [pflag](github.com/spf13/pflag) package, and the [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#install_use) as prerequisites. To learn more about installing go, see the [golang documentation](https://golang.org/doc/install#install). 
+>**Note:** This package requires go v1.10 or higher, the [pflag](github.com/spf13/pflag) package, and the [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#install_use) as prerequisites. To learn more about installing go, see the [golang documentation](https://golang.org/doc/install#install).
 
 ## How it works
 
@@ -16,7 +16,7 @@ Keep in mind the following updates:
 - The identifying information for each key, such as the key metadata and the key ID, will be different after the key is migrated into the new Key Protect service instance. The client migrates only the key material (the `payload` value) for each encryption key. To run the migrated keys on your existing applications, you must update any references to the old key IDs so that they reflect the new key ID values.  
 - As keys are copied into a new Key Protect service instance, the service will store the `payload` value for each key in base64 encoded format. This client handles base64 encoding on your behalf as part of the migration process. If you want to store more keys in the new service instance, you must update your applications to handle the base64 encoding requirement.
 
-After the migration completes, the client populates your new Key Protect service instance with your migrated encryption keys and creates a `migration.csv` file that shows how the old key IDs map to the migrated keys for easy identification. 
+After the migration completes, the client populates your new Key Protect service instance with your migrated encryption keys and creates a `migration.csv` file that shows how the old key IDs map to the migrated keys for easy identification.
 
 ## Before you begin
 
@@ -58,27 +58,27 @@ To generate authentication credentials for your legacy Key Protect service insta
 
 2. From your user profile, select the account that contains the Cloud Foundry org and space where your legacy Key Protect service instance resides.
 
-3. From the IBM Cloud dashboard, navigate to **Cloud Foundry Services**, and then select the Key Protect service instance that contains the encryption keys that you want to migrate. 
-   
+3. From the IBM Cloud dashboard, navigate to **Cloud Foundry Services**, and then select the Key Protect service instance that contains the encryption keys that you want to migrate.
+
     Note the **CF Org** and **CF Space** names that are associated with the legacy Key Protect service. You'll need to set these names as environment variables in a later step.
 
 4. Create an API key to authenticate to the legacy Key Protect service instance.
 
     - From the console menu, click **Manage > Security > Platform API Keys > Create**.
-    - Enter a name and description for your API key (for example, `legacy-kp-api-key`). Click **Create**, and copy the value. 
+    - Enter a name and description for your API key (for example, `legacy-kp-api-key`). Click **Create**, and copy the value.
 
 To generate authentication credentials for your new Key Protect service instance:
 
 1. In the IBM Cloud console, select the account and resource group where your new Key Protect service instance resides.
 
-2. From the IBM Cloud dashboard, navigate to **Services**, and then select the Key Protect service instance where you want to migrate your existing encryption keys. 
-   
+2. From the IBM Cloud dashboard, navigate to **Services**, and then select the Key Protect service instance where you want to migrate your existing encryption keys.
+
     Note the name that is associated with your Key Protect service instance. You'll need to set this name as an environment variable in a later step.
 
 3. Create a second API key to authenticate to your new Key Protect service instance.
 
     - From the console menu, click **Manage > Security > Platform API Keys > Create**.
-    - Enter a name and description for your API key (for example, `new-kp-api-key`). Click **Create**, and copy the value. 
+    - Enter a name and description for your API key (for example, `new-kp-api-key`). Click **Create**, and copy the value.
 
 ### Set your environment variables
 
@@ -109,7 +109,7 @@ To generate authentication credentials for your new Key Protect service instance
     make
     ```
 
-   This command generates the _migration-client_ and _kp_ binaries and adds them to the `bin` folder in your directory. 
+   This command generates the _migration-client_ and _kp_ binaries and adds them to the `bin` folder in your directory.
 
 2. Run the _client-wrapper.sh_ script to start migrating keys from your legacy Key Protect service instance.
 
@@ -131,11 +131,11 @@ The Key Protect keys that are stored in your Cloud Foundry org and space remain 
 
 ## Updating your applications
 
-To start using the new Key Protect service instance, update your applications so that they reference the new key IDs and point to the latest Key Protect API endpoint. 
+To start using the new Key Protect service instance, update your applications so that they reference the new key IDs and point to the latest Key Protect API endpoint.
 
 ### Connecting to the new service API endpoint
 
-Key Protect service instances that exist within a Cloud Foundry org or space use the legacy `https://ibm-key-protect.edge.bluemix.net` endpoint to interact with the Key Protect API. To interact with your new service instance, you must update any references to this endpoint to `https://keyprotect.<region>.bluemix.net`. 
+Key Protect service instances that exist within a Cloud Foundry org or space use the legacy `https://ibm-key-protect.edge.bluemix.net` endpoint to interact with the Key Protect API. To interact with your new service instance, you must update any references to this endpoint to `https://keyprotect.<region>.bluemix.net`.
 
 For example, if you created your new service instance in the the US South region, use the following endpoint and API headers to browse keys in your service:
 
@@ -151,7 +151,7 @@ For more information, see the [Key Protect API reference](https://console.bluemi
 
 ### Handling the base64 encoding requirement
 
-Because new Key Protect service instances allow only base64 encoded key material (the `payload` value in the JSON body) for keys, you must base64 decode keys on retrieval to get the same payload data that you expected previously. 
+Because new Key Protect service instances allow only base64 encoded key material (the `payload` value in the JSON body) for keys, you must base64 decode keys on retrieval to get the same payload data that you expected previously.
 
 There are many libraries in the various languages that are available for this task. If you want to check your keys by hand (or if you use shell), you can use the base64 utility to decode the retrieved payload.
 
@@ -161,7 +161,7 @@ For example, if you want to decode the base64 encoded payload after you retrieve
 echo <base64_encoded_payload> | base64 -D
 ```
 
-If you plan to use your new Key Protect service instance to import encryption keys in the future, ensure that you provide key material that is base64 encoded before you upload it to the service. 
+If you plan to use your new Key Protect service instance to import encryption keys in the future, ensure that you provide key material that is base64 encoded before you upload it to the service.
 
 ```sh
 echo <payload> | base64
