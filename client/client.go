@@ -123,18 +123,24 @@ func (c Client) Get(id string) StandardKey {
 	var keys []StandardKey
 	for _, val := range keyBody["resources"].([]interface{}) {
 		key := val.(map[string]interface{})
-		if payload, err := c.KeyPayloadCodec.DecodePayload(key["payload"].(string)); err == nil {
-			key["payload"] = payload
+		if key["state"].(float64) == 1 {
+			if payload, err := c.KeyPayloadCodec.DecodePayload(key["payload"].(string)); err == nil {
+				key["payload"] = payload
+			} else {
+				fmt.Printf("error while decoding key payload: %s\n", err)
+			}
+			keys = append(keys, StandardKey(key))
 		} else {
-			fmt.Printf("error while decoding key payload: %s\n", err)
+			log.Printf("Key with ID: %s is not migrated, since it is not active key\n", id)
 		}
-		keys = append(keys, StandardKey(key))
 	}
 
 	if len(keys) > 1 {
 		log.Println("warning: multiple keys found in GET body")
 	}
-
+	if len(keys) == 0 {
+		return nil
+	}
 	return keys[0]
 }
 

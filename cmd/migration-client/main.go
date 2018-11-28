@@ -126,20 +126,21 @@ func main() {
 
 		log.Printf("Migrating old key [%s]\n", key.Id())
 		fullKey := legacy.Get(key.Id())
+		if fullKey != nil {
+			if rawPayload, ok := fullKey["payload"]; ok {
+				payload := EncodePayload(string(rawPayload.([]byte)))
+				fullKey["payload"] = payload
+			}
 
-		if rawPayload, ok := fullKey["payload"]; ok {
-			payload := EncodePayload(string(rawPayload.([]byte)))
-			fullKey["payload"] = payload
-		}
-
-		newKey, err := kp.CreateFromDef(fullKey)
-		if err != nil {
-			log.Printf("Error while creating new key: %s\n", err)
-		} else {
-			log.Printf("Key migrated. Old ID: %s, New ID: %s\n", fullKey.Id(), newKey.Id())
-			migrated = append(migrated, []string{fullKey.Id(), newKey.Id()})
-			if err := writeConsistent(migrated); err != nil {
-				log.Printf("error saving migration state: %s\n", err)
+			newKey, err := kp.CreateFromDef(fullKey)
+			if err != nil {
+				log.Printf("Error while creating new key: %s\n", err)
+			} else {
+				log.Printf("Key migrated. Old ID: %s, New ID: %s\n", fullKey.Id(), newKey.Id())
+				migrated = append(migrated, []string{fullKey.Id(), newKey.Id()})
+				if err := writeConsistent(migrated); err != nil {
+					log.Printf("error saving migration state: %s\n", err)
+				}
 			}
 		}
 	}
