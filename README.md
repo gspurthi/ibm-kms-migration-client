@@ -3,18 +3,18 @@
 
 IBM® Key Protect service instances provisioned before 15 December 2017 are running on a legacy infrastructure that is based on Cloud Foundry. To enable fine-grained access control with Cloud IAM and other service improvements, we recommend that teams migrate their Key Protect keys into a newly provisioned instance of Key Protect.
 
-Use this go client to migrate your existing encryption keys into a new Key Protect service instance, so you can benefit from the latest IBM Cloud platform features and security improvements for the service.
+Use this go client to migrate your existing encryption keys into a new Key Protect service instance, so that you may take advantage of the latest IBM Cloud platform functionalities, enhanced security, and expanded availability of our service. 
 
 >**Note:** This package requires go v1.10 or higher, the [pflag](github.com/spf13/pflag) package, and the [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#install_use) as prerequisites. To learn more about installing go, see the [golang documentation](https://golang.org/doc/install#install). 
 
 ## How it works
 
-This utility looks for any Key Protect keys that are stored within the specified Cloud Foundry space and organization in your IBM Cloud account. When you run the client, the utility copies each encryption key into a new Key Protect service instance, where you can continue to manage the lifecycle of the keys and leverage new service capabilities.
+This utility looks for active Key Protect keys that are stored within the specified Cloud Foundry space and organization in your IBM Cloud account. When you run the client, the utility copies each encryption key into a new Key Protect service instance, where you can continue to manage the lifecycle of the keys and leverage new service capabilities.
 
 Keep in mind the following updates:
 
 - The identifying information for each key, such as the key metadata and the key ID, will be different after the key is migrated into the new Key Protect service instance. The client migrates only the key material (the `payload` value) for each encryption key. To run the migrated keys on your existing applications, you must update any references to the old key IDs so that they reflect the new key ID values.  
-- As keys are copied into a new Key Protect service instance, the service will store the `payload` value for each key in base64 encoded format to ensure there are no issues with special characters. This client handles base64 encoding on your behalf as part of the migration process. If you want to store more keys in the new service instance, you must update your applications to handle the base64 encoding requirement.
+- As keys are copied into a new Key Protect service instance, the service will store the `payload` value for each key in base64 encoded format. This client handles base64 encoding on your behalf as part of the migration process. If you want to store more keys in the new service instance, you must update your applications to handle the base64 encoding requirement.
 
 After the migration completes, the client populates your new Key Protect service instance with your migrated encryption keys and creates a `migration.csv` file that shows how the old key IDs map to the migrated keys for easy identification. 
 
@@ -129,7 +129,6 @@ The Key Protect keys that are stored in your Cloud Foundry org and space remain 
 
 > **Note:** If migration fails in the middle of moving keys, check the _migration.csv_ file to view the keys that were successfully migrated. To resume the migration process, be sure to save the _migration.csv file_, otherwise the client will move the keys again and create duplicate keys in the new instance. If you encounter more errors, check the `migration-client.log` to understand how to proceed.
 
-
 ## Updating your applications
 
 To start using the new Key Protect service instance, update your applications so that they reference the new key IDs and point to the latest Key Protect API endpoint. 
@@ -145,10 +144,10 @@ curl -X GET \
     https://keyprotect.us-south.bluemix.net/api/v2/keys \
     -H 'accept: application/vnd.ibm.collection+json' \
     -H 'authorization: <IAM_token>' \
-    -H 'bluemix-instance: <instance_ID>' \
+    -H 'bluemix-instance: <instance_ID>'
 ```
 
-For more information, see the [Key Protect API reference doc](https://console.bluemix.net/apidocs/key-protect).
+For more information, see the [Key Protect API reference](https://console.bluemix.net/apidocs/key-protect).
 
 ### Handling the base64 encoding requirement
 
@@ -172,7 +171,7 @@ echo <payload> | base64
 
 To ensure that your apps continue to work with the new changes, perform a regression test on your associated applications to complete the migration process.
 
-After your migration and testing is complete, please notify the Key Protect team by sending an email to Terry Mosbaugh at mosbaugh@us.ibm.com.
+After your migration and testing is complete, please notify the Key Protect team by sending an email to the Key Protect offering manager at mosbaugh@us.ibm.com.
 
 ## Getting help
 
