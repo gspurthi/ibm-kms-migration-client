@@ -170,10 +170,10 @@ echo <payload> | base64
 
 To ensure that your apps continue to work with the new changes, perform a regression test on your associated applications to complete the migration process.
 
-After your migration and testing is complete, please notify the Key Protect team by sending an email to mosbaugh@us.ibm.com.
+After your migration and testing is complete, please notify the Key Protect team by sending an email to Terry Mosbaugh at mosbaugh@us.ibm.com.
 
 ## Getting help
 
-If you encounter a problem during a migration or in the regression tests of your applications, you can reach out to the IBM Key Protect team for help. Connect with the Key Protect development team by sending an e-mail to mosbaugh@us.ibm.com.
+If you encounter a problem during a migration or in the regression tests of your applications, you can reach out to the IBM Key Protect team for help. Connect with the Key Protect development team by sending an e-mail to Terry Mosbaugh at mosbaugh@us.ibm.com.
 
 To find out more about the latest Key Protect service features, check out the [Key Protect service documentation](https://console.bluemix.net/docs/services/key-protect/index.html).
