@@ -17,6 +17,8 @@ import (
 	keyprotect "../../client"
 )
 
+var buildTimeStamp string
+
 func printBxClientVersion() {
 	out, err := exec.Command("bx", "--version").Output()
 	if err != nil {
@@ -33,6 +35,7 @@ func PrettyJson(data []byte) []byte {
 
 func main() {
 	flag.ErrHelp = errors.New("migration-client is used to copy keys from legacy KeyProtect instances to a new IAM enabled KeyProtect instance")
+	var flgVersion bool
 
 	var orgId string
 	var spaceId string
@@ -40,11 +43,17 @@ func main() {
 	var instanceId string
 	var iamToken string
 
+	flag.BoolVar(&flgVersion, "version", false, "if true, print version and exit")
 	flag.StringVar(&orgId, "org-id", "", "Org UUID for Legacy KP service")
 	flag.StringVar(&spaceId, "space-id", "", "Space UUID for Legacy KP service")
 	flag.StringVar(&instanceId, "instance-id", "", "Instance UUID for KP service")
 	flag.StringVar(&iamToken, "iam-token", "", "IAM Auth Token from Bluemix/IBM Cloud client")
 	flag.Parse()
+
+	if flgVersion {
+		fmt.Printf("migratin-client built on %s\n", buildTimeStamp)
+		os.Exit(0)
+	}
 
 	if orgId == "" {
 		log.Fatalln("Must specify org-id")

@@ -4,8 +4,8 @@ export CF_SPACE=""
 export LEGACY_ACCOUNT_API_KEY=""
 
 #New KP account variables
-export KP_ACCOUNT_API_KEY=""
 export KP_SERVICE_INSTANCE_NAME=""
+export KP_ACCOUNT_API_KEY=""
 
 #Stop tool update alert
 export BLUEMIX_VERSION_CHECK=false
