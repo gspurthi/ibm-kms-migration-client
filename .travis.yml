@@ -1,0 +1,20 @@
+---
+language: go
+sudo: false
+matrix:
+  include:
+    - go: 1.10.x
+
+script:
+  - make dist
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: GH_KEY_GOES_HERE
+  file_glob: true
+  file:
+    - dist/*
+  on:
+    tags: true
