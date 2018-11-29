@@ -1,5 +1,7 @@
 #!/bin/bash
 
-for id in `./kp list | sed '1d' | awk '{ print $1 }'`; do
-    ./kp delete $id
+KP_BIN="bash test/kp-wrapper.sh"
+
+for id in `$KP_BIN list | sed '1d' | awk '{ print $1 }'`; do
+    $KP_BIN delete $id
 done
