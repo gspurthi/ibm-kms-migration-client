@@ -41,7 +41,7 @@ To move keys into a new instance of Key Protect:
 1. Clone this repository into your go workspace.
 
     ```sh
-    go get github.com/IBM-Cloud/key-protect-samples
+    go get github.ibm.com/kms/migration-client
     ```
 
 2. Change into the newly created directory to begin working with the migration client.
@@ -125,7 +125,7 @@ Success! Your existing keys are now migrated into a new Key Protect service inst
 | ------------------------------------ | ------------------------------------ |
 | ef9eb687-b508-45f0-8a3e-1def949bc9f8 | e9ab551c-46fe-448a-8a3c-e0f23dfff362 |
 
-The Key Protect keys that are stored in your Cloud Foundry org and space remain in the legacy Key Protect service instance until you're ready to [permanently delete the keys, and then delete the legacy Key Protect service instance]().
+The Key Protect keys that are stored in your Cloud Foundry org and space remain in the legacy Key Protect service instance until you're ready to [permanently delete the keys, and then delete the legacy Key Protect service instance](https://console.bluemix.net/docs/services/key-protect/troubleshooting.html#unable-to-delete-service).
 
 > **Note:** If migration fails in the middle of moving keys, check the _migration.csv_ file to view the keys that were successfully migrated. To resume the migration process, be sure to save the _migration.csv file_, otherwise the client will move the keys again and create duplicate keys in the new instance. If you encounter more errors, check the `migration-client.log` to understand how to proceed.
 
