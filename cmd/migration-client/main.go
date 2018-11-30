@@ -51,7 +51,7 @@ func main() {
 	flag.Parse()
 
 	if flgVersion {
-		fmt.Printf("migratin-client built on %s\n", buildTimeStamp)
+		fmt.Printf("migration-client built on %s\n", buildTimeStamp)
 		os.Exit(0)
 	}
 

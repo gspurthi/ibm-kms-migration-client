@@ -1,9 +1,9 @@
-NOW := $(shell date +"%c" | tr ' :' '__')
+NOW := $(shell date -u --iso=s )
 build: migration-client kp
 
 test: build
-	bash -c ". envs && bash test/client-wrapper.sh"
+	bash -c ". envs && bash scripts/client-wrapper.sh"
 
 %:: cmd/%/main.go
-	(cd cmd/$@ && go build -ldflags "-X main.buildTimeStamp=$(NOW)" main.go )
-	mkdir -p ./bin && cp cmd/$@/main ./bin/$@
+	(cd cmd/$@ && go build -ldflags "-X main.buildTimeStamp=$(NOW)" . ) 
+	mkdir -p ./bin && cp cmd/$@/$@ ./bin/$@
