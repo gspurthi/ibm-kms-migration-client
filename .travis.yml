@@ -12,9 +12,10 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: GH_KEY_GOES_HERE
+    secure: CgHiN4y01XRL75yhtZbvJPYnANxCQsrKMuDz4RzJCp/McXGASM9nLEj1GC6xQp1qqP9od0OrCZ/scOgeYmN2h92w3VsL2aArlSFYNGBDFzmerMlTDdeSQysV5kFyEUxkJYOaSyNwWX9pwrURpbsMSqZwhXJ8sI15RS2S9qct+grKecT1viAVWUhstM8vkKr45tKHosp/BldzoOHJmeBIdDtEuNwqaSMqJYdi2xkGQs312DFPRa8uloOlipuHWJy3abVgESzWJqn85ka7545cCYjyDgASq3pEPaDgoPACaka/cZV4rKLep5sdhdpWj56ygSYkggzKIsJzkPCf+j+tQ/aLU2RYYSlAgKMjhHwk+qtxKZrcoeGSEB7JTckZ1hpZFyeNerx8phdlBlbS/pj83j2zX+szcGYYlLZTFsyaHVKhrRbf1cxHhd0Nw0KLQAh2wsVootmYch7MVkad8COHZHzPUSHz+GayfafvOzn1YhPJrRyYwIG/BNj4zUAwzc66EzryWz2TS07e++eXbEtn46RUVK4Jw3LvmXbc28dBklu5E0ctDdZxGXltpQcnWmuN02rvhunl43io415FVbO+W4tbtTSRh6UdzaqASidrBEG1hcJWMu3RRgyt2rPDW/5tRQc0AdFpzeifJorcJjFuxwca9+89NPxSqVCy2Q5+H6E=
   file_glob: true
   file:
     - dist/*
   on:
     tags: true
+    repo: locke105/ibm-kms-migration-client
