@@ -53,35 +53,25 @@ To move keys into a new instance of Key Protect:
     cd migration-client
     ```
 
-### Generate authentication credentials
+### Gather required information
 
-To generate authentication credentials for your legacy Key Protect service instance:
+Gather the Org and Space information of your legacy Key Protect service instance:
 
 1. [Log in to the IBM Cloud console](https://console.bluemix.net).
 
 2. From your user profile, select the account that contains the Cloud Foundry org and space where your legacy Key Protect service instance resides.
 
-3. From the IBM Cloud dashboard, navigate to **Cloud Foundry Services**, and then select the Key Protect service instance that contains the encryption keys that you want to migrate.
+3. From the IBM Cloud dashboard, navigate to **Cloud Foundry Services**, and then find the Key Protect service instance that contains the encryption keys that you want to migrate.
 
     Note the **CF Org** and **CF Space** names that are associated with the legacy Key Protect service. You'll need to set these names as environment variables in a later step.
 
-4. Create an API key to authenticate to the legacy Key Protect service instance.
-
-    - From the console menu, click **Manage > Security > Platform API Keys > Create**.
-    - Enter a name and description for your API key (for example, `legacy-kp-api-key`). Click **Create**, and copy the value.
-
-To generate authentication credentials for your new Key Protect service instance:
+Gather the service instace name of your new Key Protect service instance:
 
 1. In the IBM Cloud console, select the account and resource group where your new Key Protect service instance resides.
 
 2. From the IBM Cloud dashboard, navigate to **Services**, and then select the Key Protect service instance where you want to migrate your existing encryption keys.
 
     Note the name that is associated with your Key Protect service instance. You'll need to set this name as an environment variable in a later step.
-
-3. Create a second API key to authenticate to your new Key Protect service instance.
-
-    - From the console menu, click **Manage > Security > Platform API Keys > Create**.
-    - Enter a name and description for your API key (for example, `new-kp-api-key`). Click **Create**, and copy the value.
 
 ### Set your environment variables
 
@@ -90,16 +80,18 @@ To generate authentication credentials for your new Key Protect service instance
 2. Set the following environment variables to authenticate to your Key Protect service instances.
 
     ```sh
-    # Legacy service variables
+    ## Legacy account variables ##
     export CF_ORG="<organization_name>"
     export CF_SPACE="<space_name>"
-    export LEGACY_ACCOUNT_API_KEY=<legacy_kp_api_key>
-    # New service variables
+    
+    ## New KP account variables ##
     export KP_SERVICE_INSTANCE_NAME="<instance_name>"
-    export KP_ACCOUNT_API_KEY=<new_kp_api_key>
-   ```
+    
+    # optional, set this if your new KeyProtect service instance is in a different IBM Cloud Account
+    #export KP_ACCOUNT_ID=""
+    ```
 
-    Replace `<organization_name>`, `<space_name>`, `<legacy_kp_api_key>`, `<instance_name>`, and `<new_kp_api_key>` with the values that you retrieved in the previous step.
+    Replace `<organization_name>`, `<space_name>`, and `<instance_name>` with the values that you retrieved in the previous step.
 
 3. Save the `envs` file and continue to the next step.
 

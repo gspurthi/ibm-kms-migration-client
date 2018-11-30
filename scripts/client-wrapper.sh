@@ -1,43 +1,42 @@
 #!/bin/bash
-source envs
 
-function get_legacy_acc_info {
-    echo "==  logging to legacy account"
-    echo
-    bx login -a https://api.ng.bluemix.net --apikey $LEGACY_ACCOUNT_API_KEY
-    echo "==  targetting to org and space"
-    echo
-    bx target --cf-api https://api.ng.bluemix.net -o "$CF_ORG" -s "$CF_SPACE"
-    ORG_ID=$(bx cf org "$CF_ORG" --guid | tail -n 1)
-    SPACE_ID=$(bx cf space "$CF_SPACE" --guid | tail -n 1)
-    echo "==  obtained org_id, space_id"
-    echo
+. envs
+
+# stop bx/ibmcloud tool update alert
+export BLUEMIX_VERSION_CHECK=false
+
+die() {
+    [ -n "$1" ] && echo "$*" >&2
+    exit 1
 }
 
-function get_new_acc_info {
-    echo "==  logging to new account"
-    echo
-    bx login -a https://api.ng.bluemix.net --apikey $KP_ACCOUNT_API_KEY
-    KP_SERVICE_INSTANCE_ID=$(bx resource service-instance "$KP_SERVICE_INSTANCE_NAME" | grep GUID: | sed 's/GUID://' | sed 's/ //g')
-    IAM_TOKEN=$(bx iam oauth-tokens | awk '{print $3" "$4}')
-    echo "==  obtained iam_token, kp_service_instance_id"
-    echo
-}
+# log in to bluemix interactively
+# if you have multiple accounts, be sure to pick the account where your legacy KeyProtect instance is located
+bx login --sso
 
-echo
-echo "== getting legacy account info"
-get_legacy_acc_info
+# target the cloudfoundry org/space
+bx target --cf-api https://api.ng.bluemix.net -o "$CF_ORG" -s "$CF_SPACE"
 
-echo
-echo "== getting new account info"
-get_new_acc_info
+# gather GUID information for org/space
+ORG_ID=$(bx cf org "$CF_ORG" --guid | tail -n 1)
+SPACE_ID=$(bx cf space "$CF_SPACE" --guid | tail -n 1)
 
-echo
-echo "== running key migration"
-./bin/migration-client --org-id="$ORG_ID" --space-id="$SPACE_ID" --instance-id="$KP_SERVICE_INSTANCE_ID" --iam-token="$IAM_TOKEN" &> migration-client.log
-echo
+# optional: log into account with new legacy keyprotect instance
+# if your new instance is in the same account (likely), we can skip this
+[ -n "$KP_ACCOUNT_ID" ] && bx target -c $KP_ACCOUNT_ID
 
-if [[ -f migration-client.log && -s migration-client.log ]]
-then
-	echo "== key migration script completed, please review migration-client.log file for detail"
+# gather new KeyProtect instance ID
+KP_SERVICE_INSTANCE_ID=$(bx resource service-instance "$KP_SERVICE_INSTANCE_NAME" | grep GUID: | sed 's/GUID://' | sed 's/ //g')
+[ -n "$KP_SERVICE_INSTANCE_ID" ] || die "error: couldn't retrieve the instance ID for instance '$KP_SERVICE_INSTANCE_NAME'"
+
+# get an IAM token so we can authenticate to KeyProtect
+IAM_TOKEN=$(bx iam oauth-tokens | awk '/IAM token:/ {print $3" "$4}')
+
+# kick off the migration with the information we gathered above
+echo "running: ./migration-client --org-id=$ORG_ID --space-id=$SPACE_ID --instance-id=$KP_SERVICE_INSTANCE_ID --iam-token=\"$IAM_TOKEN\""
+./migration-client --org-id="$ORG_ID" --space-id="$SPACE_ID" --instance-id="$KP_SERVICE_INSTANCE_ID" --iam-token="$IAM_TOKEN"
+if [ $? -eq 0 ]; then
+    echo "migration-client completed successfully. check 'migration.csv' for keys that were migrated"
+else
+    die "migration-client hit an error"
 fi

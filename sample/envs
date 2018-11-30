@@ -1,11 +1,9 @@
-#Legacy account variables
+## Legacy account variables ##
 export CF_ORG=""
 export CF_SPACE=""
-export LEGACY_ACCOUNT_API_KEY=""
 
-#New KP account variables
+## New KP account variables ##
 export KP_SERVICE_INSTANCE_NAME=""
-export KP_ACCOUNT_API_KEY=""
 
-#Stop tool update alert
-export BLUEMIX_VERSION_CHECK=false
+# optional, set this if your new KeyProtect service instance is in a different IBM Cloud Account
+#export KP_ACCOUNT_ID=""
