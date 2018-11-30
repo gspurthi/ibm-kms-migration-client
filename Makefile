@@ -1,5 +1,9 @@
 NOW := $(shell date -u --iso=s )
-build: migration-client kp
+
+deps:
+	go get -v github.com/spf13/pflag
+
+build: deps migration-client kp
 
 test: build
 	bash -c ". envs && bash scripts/client-wrapper.sh"
