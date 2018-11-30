@@ -7,7 +7,7 @@ IBM® Key Protect service instances provisioned before 15 December 2017 are runn
 
 Use this go client to migrate your existing encryption keys into a new Key Protect service instance, so that you may take advantage of the latest IBM Cloud platform functionalities, enhanced security, and expanded availability of our service.
 
->**Note:** This package requires the [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#install_use) as a prerequisite.
+>**Note:** This utility requires the [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#install_use) as a prerequisite.
 
 ## How it works
 
@@ -15,8 +15,12 @@ This utility looks for active Key Protect keys that are stored within the specif
 
 Keep in mind the following updates:
 
-- The identifying information for each key, such as the key metadata and the key ID, will be different after the key is migrated into the new Key Protect service instance. The client migrates only the key material (the `payload` value) for each encryption key. To run the migrated keys on your existing applications, you must update any references to the old key IDs so that they reflect the new key ID values.  
-- As keys are copied into a new Key Protect service instance, the service will store the `payload` value for each key in base64 encoded format. This client handles base64 encoding on your behalf as part of the migration process. If you want to store more keys in the new service instance, you must update your applications to handle the base64 encoding requirement.
+- **The identifying information for each key, such as the key metadata and the key ID, will be different after the key is migrated into the new Key Protect service instance.** The client migrates only the key material (the `payload` value) for each encryption key. To run the migrated keys on your existing applications, you must update any references to the old key IDs so that they reflect the new key ID values.  
+- **You must update your applications to handle the newly base64 encoded key payloads.** New Key Protect service instances require the `payload` value for each key will to be encoded to base64. This client handles base64 encoding on your behalf as part of the migration process, but you will need to handle decoding the payload in your application when you retrieve keys from the new instance.
+- **The new KeyProtect instances will only be accessible with IAM tokens.** CloudFoundry/UAA tokens will not work with the new instances, and have been deprecated in the legacy instances already. If you are already using IAM tokens in legacy instances, there shouldn't be any changes needed, other than ensuring IAM Access Policies are updated for access to the new KeyProtect instance.
+- **You will need to update your application(s) to use the new US-SOUTH region endpoint for KeyProtect.** Other than the IAM and base64 payloads mentioned above, the API remains compatible between legacy and new instances. However the new instances must be accessed through the new US-SOUTH region endpoint, `https://keyprotect.us-south.bluemix.net/`. Generally, this should be a simple change to the host portion of the URL in configuration or the application code. i.e. `https://ibm-key-protect.edge.bluemix.net/api/v2/keys` will become `https://keyprotect.us-south.bluemix.net/api/v2/keys`
+
+For more details on these changes and how to update your application, please check the [Updating your applications](#updating-your-applications) section.
 
 After the migration completes, the client populates your new Key Protect service instance with your migrated encryption keys and creates a `migration.csv` file that shows how the old key IDs map to the migrated keys for easy identification.
 
