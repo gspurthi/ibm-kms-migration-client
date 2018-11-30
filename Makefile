@@ -12,4 +12,5 @@ dist:
 	scripts/build/dist.sh
 
 clean:
+	rm -rf bin/
 	rm -rf build/ dist/
