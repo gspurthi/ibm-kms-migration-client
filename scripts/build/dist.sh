@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash -e
 
-extra_files=(README.md test/client-wrapper.sh sample/envs)
+extra_files=(README.md scripts/client-wrapper.sh sample/envs)
 
 archs=(amd64)
 oss=(windows linux darwin)
@@ -9,12 +9,14 @@ cmd="migration-client"
 
 for os in ${oss[@]}; do
     for arch in ${archs[@]}; do
-        (cd cmd/$cmd/ && GOOS=${os} GOARCH=${arch} go build .)
-        binname="${cmd}"
+        (cd cmd/$cmd/ && GOOS=${os} GOARCH=${arch} go build main.go)
+        src_name="main"
+        dest_name="${cmd}"
         if [ "$os" == "windows" ]; then
-            binname="${binname}.exe"
+            src_name="${src_name}.exe"
+            dest_name="${dest_name}.exe"
         fi
-        mkdir -p ./build/${os}.${arch} && cp cmd/$cmd/$binname ./build/${os}.${arch}/$binname
+        mkdir -p ./build/${os}.${arch} && cp cmd/$cmd/$src_name ./build/${os}.${arch}/$dest_name
 
         for extra in ${extra_files[@]}; do
             cp $extra ./build/${os}.${arch}/

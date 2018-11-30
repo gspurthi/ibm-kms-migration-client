@@ -2,6 +2,7 @@ bin/*
 envs
 migration.csv
 
+cmd/*/main*
 cmd/*/kp*
 cmd/*/migration-client*
 
