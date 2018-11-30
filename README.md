@@ -7,7 +7,7 @@ IBM® Key Protect service instances provisioned before 15 December 2017 are runn
 
 Use this go client to migrate your existing encryption keys into a new Key Protect service instance, so that you may take advantage of the latest IBM Cloud platform functionalities, enhanced security, and expanded availability of our service.
 
->**Note:** This package requires go v1.10 or higher, the [pflag](github.com/spf13/pflag) package, and the [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#install_use) as prerequisites. To learn more about installing go, see the [golang documentation](https://golang.org/doc/install#install).
+>**Note:** This package requires the [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#install_use) as a prerequisite.
 
 ## How it works
 
