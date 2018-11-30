@@ -1,6 +1,8 @@
 
 # migration-client
 
+[![Build Status](https://travis-ci.org/locke105/ibm-kms-migration-client.svg?branch=master)](https://travis-ci.org/locke105/ibm-kms-migration-client)
+
 IBM® Key Protect service instances provisioned before 15 December 2017 are running on a legacy infrastructure that is based on Cloud Foundry. To enable fine-grained access control with Cloud IAM and other service improvements, we recommend that teams migrate their Key Protect keys into a newly provisioned instance of Key Protect.
 
 Use this go client to migrate your existing encryption keys into a new Key Protect service instance, so that you may take advantage of the latest IBM Cloud platform functionalities, enhanced security, and expanded availability of our service.
