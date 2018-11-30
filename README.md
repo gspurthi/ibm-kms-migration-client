@@ -105,7 +105,7 @@ To generate authentication credentials for your new Key Protect service instance
 1. Run the _client-wrapper.sh_ script to start migrating keys from your legacy Key Protect service instance.
 
     ```sh
-    ./scripts/client-wrapper.sh
+    ./client-wrapper.sh
     ```
 
     The client logs into IBM Cloud by using the IBM Cloud CLI plug-in, and then authenticates to each of your Key Protect service instances.
