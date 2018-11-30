@@ -88,8 +88,6 @@ func (c Client) Request(method string, url string, data io.Reader, headers map[s
 func (c Client) List() []StandardKey {
 	_, bodyText := c.Request("GET", c.uri, nil, nil)
 
-	//log.Printf("debug: %s\n", bodyText)
-
 	var keyList map[string]interface{}
 
 	if err := json.Unmarshal(bodyText, &keyList); err != nil {
