@@ -17,7 +17,7 @@ import (
 	keyprotect "../../client"
 )
 
-var buildTimeStamp string
+var buildVersion string
 
 func printBxClientVersion() {
 	out, err := exec.Command("bx", "--version").Output()
@@ -51,7 +51,7 @@ func main() {
 	flag.Parse()
 
 	if flgVersion {
-		fmt.Printf("migration-client built on %s\n", buildTimeStamp)
+		fmt.Printf("migration-client, version %s\n", buildVersion)
 		os.Exit(0)
 	}
 

@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 extra_files=(README.md scripts/client-wrapper.sh sample/envs)
+version=$(git describe --always)
 
 archs=(amd64)
 oss=(windows linux darwin)
@@ -9,7 +10,7 @@ cmd="migration-client"
 
 for os in ${oss[@]}; do
     for arch in ${archs[@]}; do
-        (cd cmd/$cmd/ && GOOS=${os} GOARCH=${arch} go build -ldflags "-X main.buildTimeStamp=$(date --iso=s -u)" main.go)
+        (cd cmd/$cmd/ && GOOS=${os} GOARCH=${arch} go build -ldflags "-X main.buildVersion=${version}" main.go)
         src_name="main"
         dest_name="${cmd}"
         if [ "$os" == "windows" ]; then
