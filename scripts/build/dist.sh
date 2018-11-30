@@ -9,7 +9,7 @@ cmd="migration-client"
 
 for os in ${oss[@]}; do
     for arch in ${archs[@]}; do
-        (cd cmd/$cmd/ && GOOS=${os} GOARCH=${arch} go build main.go)
+        (cd cmd/$cmd/ && GOOS=${os} GOARCH=${arch} go build -ldflags "-X main.buildTimeStamp=$(date --iso=s -u)" main.go)
         src_name="main"
         dest_name="${cmd}"
         if [ "$os" == "windows" ]; then
