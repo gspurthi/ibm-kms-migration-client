@@ -40,7 +40,7 @@ To move keys into a new instance of Key Protect:
 
 ### Download the latest migration-client 
 
-1. Download the latest release of migration-client for your platform. 
+1. Download the latest release of migration-client for your platform from the [Releases page](https://github.com/locke105/ibm-kms-migration-client/releases)
 
 2. Unzip the release and move into the newly created directory to begin working with the migration client.
 
@@ -102,15 +102,7 @@ To generate authentication credentials for your new Key Protect service instance
 
 ## Migrating your keys
 
-1. From the `migration-client` directory, run the following `make` command to build the binaries.
-
-    ```sh
-    make
-    ```
-
-   This command generates the _migration-client_ and _kp_ binaries and adds them to the `bin` folder in your directory.
-
-2. Run the _client-wrapper.sh_ script to start migrating keys from your legacy Key Protect service instance.
+1. Run the _client-wrapper.sh_ script to start migrating keys from your legacy Key Protect service instance.
 
     ```sh
     ./scripts/client-wrapper.sh
