@@ -36,17 +36,14 @@ To move keys into a new instance of Key Protect:
 
 ## Setting up the migration client
 
-### Clone the repository
+### Download the latest migration-client 
 
-1. Clone this repository into your go workspace.
+1. Download the latest release of migration-client for your platform. 
 
-    ```sh
-    go get github.ibm.com/kms/migration-client
-    ```
-
-2. Change into the newly created directory to begin working with the migration client.
+2. Unzip the release and move into the newly created directory to begin working with the migration client.
 
     ```sh
+    unzip migration-client-linux-amd64.zip -d migration-client
     cd migration-client
     ```
 
